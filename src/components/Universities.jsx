@@ -141,6 +141,19 @@ function HoverPreview({ uni, mousePos }) {
           color:"rgba(201,168,76,.4)", fontSize:".62rem", letterSpacing:".1em" }}>
           点击卡片 · 访问官网 →
         </div>
+        {/* 手机端显示访问按钮 */}
+        <button
+          onTouchStart={(e) => { e.stopPropagation(); window.open(uni.website, "_blank"); }}
+          style={{
+            display: "block", width:"100%", marginTop:".7rem",
+            background:`linear-gradient(to right, ${uni.gradStart}, ${uni.gradEnd})`,
+            border:"none", color:"#fff", fontSize:".78rem", fontWeight:700,
+            padding:"8px 0", borderRadius:8, cursor:"pointer",
+            letterSpacing:".05em",
+          }}
+        >
+          访问官网 →
+        </button>
       </div>
 
       <style>{`
@@ -160,9 +173,28 @@ function UniCard({ uni }) {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const timerRef = useRef(null);
 
+  const isTouchDevice = () => window.matchMedia("(hover: none)").matches;
+
   const onEnter = () => { clearTimeout(timerRef.current); setHovered(true); };
   const onLeave = () => { timerRef.current = setTimeout(() => setHovered(false), 80); };
   const onMove  = useCallback((e) => setMousePos({ x: e.clientX, y: e.clientY }), []);
+
+  // 手机端：点击卡片切换浮窗；点击卡片外部关闭
+  const onTouchStart = useCallback((e) => {
+    setMousePos({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
+    setHovered(prev => !prev);
+  }, []);
+
+  useEffect(() => {
+    if (!hovered) return;
+    const handleOutside = (e) => {
+      // 浮窗本身 pointerEvents:none，所以任何点击都算"外部"
+      timerRef.current = setTimeout(() => setHovered(false), 80);
+    };
+    document.addEventListener("touchstart", handleOutside);
+    return () => document.removeEventListener("touchstart", handleOutside);
+  }, [hovered]);
+
   useEffect(() => () => clearTimeout(timerRef.current), []);
 
   return (
@@ -171,7 +203,8 @@ function UniCard({ uni }) {
         onMouseEnter={onEnter}
         onMouseLeave={onLeave}
         onMouseMove={onMove}
-        onClick={() => window.open(uni.website, "_blank")}
+        onTouchStart={onTouchStart}
+        onClick={() => { if (!isTouchDevice()) window.open(uni.website, "_blank"); }}
         style={{
           background:"#fff", border:"1px solid #e7e5e4", borderRadius:16,
           overflow:"hidden", cursor:"pointer",
