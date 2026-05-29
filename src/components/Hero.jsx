@@ -198,7 +198,7 @@ export default function Hero() {
           >
             <span className="w-8 h-px" style={{ background: "var(--gold)" }} />
             <span className="text-sm tracking-widest uppercase text-[var(--muted)]">
-              MALAYSIA STUDY ABROAD GUIDE 2025
+              MALAYSIA STUDY ABROAD GUIDE 2026
             </span>
           </div>
 

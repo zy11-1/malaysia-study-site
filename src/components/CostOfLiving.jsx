@@ -77,7 +77,7 @@ export default function CostOfLiving() {
 
         <div className="bg-white rounded-3xl p-8 shadow-sm border border-stone-100">
           <h3 className="text-lg font-bold text-stone-800 mb-2">主要城市月均生活费参考</h3>
-          <p className="text-sm text-stone-400 mb-6">以马来西亚林吉特（RM）计，1 RM ≈ 1.6 人民币</p>
+          <p className="text-sm text-stone-400 mb-6">以马来西亚林吉特（RM）计，1 RM ≈ 1.7 人民币</p>
 
           <div className="grid grid-cols-3 gap-3 mb-6">
             {cities.map((c) => (
